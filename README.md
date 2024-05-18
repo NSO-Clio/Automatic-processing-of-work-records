@@ -12,7 +12,8 @@
 > Наш итоговый продукт-сайт, на который можно загрузить фотографии трудовой книжки, и получить заполненные поля со считанными данными, которые в случае чего можно посмотреть и исправить вручную, а затем сохранить в форме JSON-файла
 
 # Архитектура модели
-![image](https://github.com/NSO-Clio/Automatic-processing-of-work-records/assets/124351915/7201a98c-8a13-4f4d-a553-c7eeafe5d3d8)
+![image](https://github.com/NSO-Clio/Automatic-processing-of-work-records/assets/124351915/9d826355-48f5-41c3-a1a4-3b4c8fa44c25)
+
 
 # Архитектура приложения
 
