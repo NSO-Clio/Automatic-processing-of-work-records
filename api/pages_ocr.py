@@ -1,10 +1,12 @@
 import cv2
 from shiftlab_ocr.doc2text.reader import Reader
+from spellchecker import SpellChecker
 
 
 class Ocr_of_secondary_pages:
     def __init__(self) -> None:
         self.ocr_reader = Reader()
+        self.russian = SpellChecker(language='ru')
 
     @staticmethod
     def calculate_y_distances(boxes: list, y_max: float, flag: bool = False) -> list:
@@ -83,9 +85,13 @@ class Ocr_of_secondary_pages:
             result_1, result_2 = (self.ocr_reader.doc2text(f'col_{i}.jpg'),
                                   self.ocr_reader.doc2text("col__2.jpg"))
             data['data'].append(text_dt[i] if len(text_dt) > i else "notFound")
+            data['data'].append(text_dt[i] if len(text_dt) > i else "notFound")
             data['job_title'].append(
-                result_1[0].lower().split('на должность')[-1].strip() if 'на должность' in result_1[0].lower()
-                else "notFound")
-            data['work'].append(result_1[0])
-            data['description'].append(result_2[0])
+                result_1[0].lower().split('на должность')[-1].strip()
+                if 'на должность' in ' '.join([self.russian.correction(i) if self.russian.correction(i) else i
+                                               for i in result_1[0].split()]).lower() else "notFound")
+            data['work'].append(' '.join([self.russian.correction(i) if self.russian.correction(i) else i
+                                          for i in result_1[0].split()]))
+            data['description'].append(' '.join([self.russian.correction(i) if self.russian.correction(i) else i
+                                                 for i in result_2[0].split()]))
         return data
