@@ -13,7 +13,7 @@ class TitleInformation:
     def __init__(self):
         pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
         self.reader = Reader()
-    
+
     def get_texts(self, img_path, se=15):
         img = cv2.imread(img_path)
         c = len(img) // se
@@ -21,7 +21,7 @@ class TitleInformation:
         tekst_ruk = []
         tekst_peh = []
         for i in range(len(img) // c):
-            if i > 0 and i < len(img) // c:
+            if 0 < i < len(img) // c:
                 st = i * c - pt
                 en = (i + 1) * c + pt
             else:
@@ -32,7 +32,7 @@ class TitleInformation:
             tekst_peh.append(tru)
             src = r'temp/1.jpg'
             Image.fromarray(part).save(src)
-            trk = self.reader.doc2text(src)[0] 
+            trk = self.reader.doc2text(src)[0]
             tekst_ruk.append(trk)
         return tekst_ruk, tekst_peh
 
@@ -53,7 +53,7 @@ class TitleInformation:
             elif 'отч' in analysis['gr']:
                 middle_name = word['text'].capitalize()
         return second_name, first_name, middle_name
-    
+
     @staticmethod
     def extract_date(text):
         text_new = ''.join(list(filter(lambda x: x != 'г', list(text))))
@@ -63,7 +63,8 @@ class TitleInformation:
 
     @staticmethod
     def is_month(txt):
-        mnths = ['январ', 'феврал', 'март', 'апрел', 'май', 'мая', 'июн', 'июл', 'август', 'сентябр', 'октябр', 'ноябр', 'декабр']
+        mnths = ['январ', 'феврал', 'март', 'апрел', 'май', 'мая', 'июн', 'июл', 'август', 'сентябр', 'октябр', 'ноябр',
+                 'декабр']
         for m in mnths:
             if m in txt:
                 return m
@@ -93,10 +94,11 @@ class TitleInformation:
             elif je:
                 dates.extend(je)
         return dates
-    
+
     @staticmethod
     def get_numer_series(img_path):
-        series = ['AT-VIII', 'AT-VII', 'AT-VI', 'AT-IV', 'AT-V', 'AT-III', 'AT-II', 'AT-I', 'AT-IX', 'AT-X', 'TK-III', 'TK-II', 'TK-I', 'TK']
+        series = ['AT-VIII', 'AT-VII', 'AT-VI', 'AT-IV', 'AT-V', 'AT-III', 'AT-II', 'AT-I', 'AT-IX', 'AT-X', 'TK-III',
+                  'TK-II', 'TK-I', 'TK']
         img = cv2.imread(img_path)
         txt = pytesseract.image_to_string(Image.fromarray(img[:img.shape[0] // 5, img.shape[1] // 2:]))
         final_ser = None
@@ -107,7 +109,7 @@ class TitleInformation:
         if ''.join(list(filter(str.isdigit, list(txt)))):
             num = ''.join(list(filter(str.isdigit, list(txt))))
         return num, final_ser
-    
+
     @staticmethod
     def get_graduate(txt):
         obrz = ['высшее', 'среднее', 'начальное']
@@ -133,9 +135,10 @@ class TitleInformation:
             data = dates[-1]
         num, ser = self.get_numer_series(img_path)
         grad = self.get_graduate(txt_ruk + txt_peh)
-        dct = {'Фамилия': fio[0], 'Имя': fio[1], 'Отчество': fio[2], 'Дата рождения': brn, 'Дата заполнения': data, 'Серия': ser, 'Номер': num, 'Образование': grad}
+        dct = {'Фамилия': fio[0], 'Имя': fio[1], 'Отчество': fio[2], 'Дата рождения': brn, 'Дата заполнения': data,
+               'Серия': ser, 'Номер': num, 'Образование': grad}
         return dct, all(dct.values())
-    
+
     def get_full_info(self, img_path):
         past_info = None
         c_lst = [15, 17, 14]
