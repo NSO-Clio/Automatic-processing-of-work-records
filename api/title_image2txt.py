@@ -6,15 +6,7 @@ from PIL import Image
 import pytesseract
 import os
 import warnings
-
-
 warnings.simplefilter('ignore')
-
-
-
-
-
-
 
 
 class TitleInformation:
@@ -60,7 +52,6 @@ class TitleInformation:
                 second_name = word['text'].capitalize()
             elif 'отч' in analysis['gr']:
                 middle_name = word['text'].capitalize()
-
         return second_name, first_name, middle_name
     
     @staticmethod
@@ -83,7 +74,6 @@ class TitleInformation:
         pattern = r'\b\d{4}г'
         matches = re.findall(pattern, txt)
         return matches
-
 
     def get_dates(self, txt):
         dates = []
@@ -126,7 +116,6 @@ class TitleInformation:
                 if ob in x:
                     return x
         return 'Не определено'
-
 
     def get_information(self, img_path, u=15):
         tekst_ruk, tekst_peh = self.get_texts(img_path, u)
