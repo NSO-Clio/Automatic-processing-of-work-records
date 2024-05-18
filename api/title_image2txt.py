@@ -1,6 +1,6 @@
 from pymystem3 import Mystem
 import re
-from doc2text.reader import Reader
+from shiftlab_ocr.doc2text.reader import Reader
 import cv2
 from PIL import Image
 import pytesseract
