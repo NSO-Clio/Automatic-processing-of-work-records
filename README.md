@@ -36,9 +36,11 @@
 # Stack
 - Flask
 - pymystem3
-- shiftlab_ocr
+- shiftlab-ocr
 - pytesseract
-- PIL
+- pyspellchecker
+- opencv-python
+- Pillow
 - cv2
 - re
 - os
