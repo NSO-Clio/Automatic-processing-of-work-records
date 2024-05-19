@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Данные трудовой книжки</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Данные трудовой книжки</h1>
+                <form action="{{ url_for('form') }}" method="post">
+                    <div class="form-group">
+                        <label for="service_record_series">Серия трудовой книжки</label>
+                        <input type="text" id="service_record_series" name="service_record_series"
+                               value="{{ model_data.get('service_record_series', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="service_record_number">Номер трудовой книжки</label>
+                        <input type="text" id="service_record_number" name="service_record_number"
+                               value="{{ model_data.get('service_record_number', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last_name">Фамилия</label>
+                        <input type="text" id="last_name" name="last_name"
+                               value="{{ model_data.get('last_name', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="first_name">Имя</label>
+                        <input type="text" id="first_name" name="first_name"
+                               value="{{ model_data.get('first_name', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="middle_name">Отчество</label>
+                        <input type="text" id="middle_name" name="middle_name"
+                               value="{{ model_data.get('middle_name', '') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="education">Образование</label>
+                        <input type="text" id="education" name="education"
+                               value="{{ model_data.get('education', '') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birthday">Дата рождения</label>
+                        <input type="date" id="birthday" name="birthday"
+                               value="{{ model_data.get('birthday', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fill_date">Дата заполнения трудовой книжки</label>
+                        <input type="date" id="fill_date" name="fill_date"
+                               value="{{ model_data.get('fill_date', '') }}" required>
+                    </div>
+
+                    <h2>Записи из трудовой книжки</h2>
+                    <div id="entries">
+                        {% for dct in table_data %}
+                            <div class="entry" id="entry_{{ loop.index }}">
+                                <h3>Запись {{ loop.index }}</h3>
+                                <div class="form-group">
+                                    <label for="entry_date_{{ loop.index }}">Дата</label>
+                                    <input type="date" id="entry_date_{{ loop.index }}" name="entry_date_{{ loop.index }}"
+                                           value="{{ dct['entry_date'] }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="entry_info_{{ loop.index }}">Запись</label>
+                                    <input type="text" id="entry_info_{{ loop.index }}" name="entry_info_{{ loop.index }}"
+                                           value="{{ dct['entry_info'] }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="entry_stamp_{{ loop.index }}">Приказ</label>
+                                    <input type="text" id="entry_stamp_{{ loop.index }}" name="entry_stamp_{{ loop.index }}"
+                                           value="{{ dct['entry_stamp'] }}">
+                                </div>
+
+                                <div style="margin-top: -10px; margin-bottom: 20px;">
+                                    <button type="button" class="remove_entry" data-id="{{ loop.index }}">Удалить запись</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" id="entries_count" name="entries_count" value="{{ table_data_len }}">
+                    <button type="button" id="add_entry">Добавить запись о работе</button>
+                    <div style="margin-top: 50px">
+                        <p><button type="submit">Сформировать json</button></p>
+                        <p><a href="{{ url_for('index') }}" class="btn">Выход</a></p>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <h1>Галерея фотографий</h1>
+                <div id="photoCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for path in filepaths %}
+                            <div class="carousel-item {% if loop.first %} active {% endif %}">
+                                <img src="{{ path }}" class="d-block w-100" alt="Страница {{ loop.index }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#photoCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#photoCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#toggle_name_change').click(function() {
+                $('#name_change_block').toggleClass('hidden');
+            });
+
+            let entryCount = {{ table_data_len }};
+            $('#add_entry').click(function() {
+                entryCount++;
+                $('#entries_count').val(entryCount);
+                $('#entries').append(`
+                    <div class="entry" id="entry_${entryCount}">
+                        <h3>Запись ${entryCount}</h3>
+                        <div class="form-group">
+                            <label for="entry_date_${entryCount}">Дата</label>
+                            <input type="date" id="entry_date_${entryCount}" name="entry_date_${entryCount}"
+                               value="{{ model_data.get('entry_date_${entryCount}', '') }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="entry_info_${entryCount}">Запись</label>
+                            <input type="text" id="entry_info_${entryCount}" name="entry_info_${entryCount}"
+                               value="{{ model_data.get('entry_info_${entryCount}', '') }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="entry_stamp_${entryCount}">Приказ</label>
+                            <input type="text" id="entry_stamp_${entryCount}" name="entry_stamp_${entryCount}"
+                               value="{{ model_data.get('entry_stamp_${entryCount}', '') }}">
+                        </div>
+
+                        <div style="margin-top: -10px; margin-bottom: 20px;">
+                            <button type="button" class="remove_entry" data-id="${entryCount}">Удалить запись</button>
+                        </div>
+                    </div>
+                `);
+            });
+
+            $(document).on('click', '.remove_entry', function() {
+                let id = $(this).data('id');
+                $('#entry_' + id).remove();
+                entryCount --;
+            });
+
+        });
+    </script>
+</body>
+</html>
