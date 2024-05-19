@@ -90,17 +90,17 @@ def form():
     model_data['birthday'] = format_date(model_data['birthday'])
     model_data['fill_date'] = format_date(model_data['fill_date'])
 
-    filepaths = [f"..{os.sep}{app.config['UPLOAD_FOLDER']}{os.sep}title{folder_num}.jpg"]
+    # filepaths = [f"..{os.sep}{app.config['UPLOAD_FOLDER']}{os.sep}title{folder_num}.jpg"]
     table_info = TableInformation()
     table_data = []
     table_files = os.listdir(f"{app.config['UPLOAD_FOLDER']}{os.sep}zip{folder_num}")
     for fname in table_files:
-        filepaths.append(f"..{os.sep}{app.config['UPLOAD_FOLDER']}{os.sep}zip{folder_num}{os.sep}{fname}")
+        # filepaths.append(f"..{os.sep}{app.config['UPLOAD_FOLDER']}{os.sep}zip{folder_num}{os.sep}{fname}")
         table_data.append(table_info.get_data(f"{app.config['UPLOAD_FOLDER']}{os.sep}zip{folder_num}{os.sep}{fname}"))
     table_data = format_tables_info(table_data)
 
     return render_template('form.html', model_data=model_data, table_data=table_data,
-                           table_data_len=len(table_data), filepaths=filepaths)
+                           table_data_len=len(table_data))
 
 
 if __name__ == '__main__':
