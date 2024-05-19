@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка фотографий</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 120vh;">
+    <div class="container2">
+        <h1>Загрузка фотографий</h1>
+        <p>Прикрипите файл с титульным листом и zip архив с остальными страницами трудовой книжки</p>
+        <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" id="file" name="file" multiple>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Загрузить" class="btn">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
