@@ -7,3 +7,4 @@ pymystem3==0.2.0
 pyspellchecker==0.8.1
 pytesseract==0.3.10
 shiftlab-ocr==0.3.2
+pandas
