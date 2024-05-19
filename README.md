@@ -5,7 +5,7 @@
 Разработанно командой Clio
 
 # Как запустить приложение?
-- ![Посмотреть тут]()
+- [Посмотреть тут](api/README.md)
 
 # Заказчик
 <IMG SRC="https://github.com/NSO-Clio/Automatic-processing-of-work-records/assets/124351915/b3cc89e4-caf9-4c88-b756-58b88335a10e" width="50%" height="50%">
